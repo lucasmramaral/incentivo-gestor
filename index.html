@@ -3,636 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clube de Pontos - Gestor</title>
+    <title>Clube de Pontos - Visão do Gestor</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --color-primary: #2D8285;
-            --color-primary-hover: #1E5A5E;
-            --color-surface: #F5F5F5;
-            --color-text: #1F2937;
-            --color-border: #E5E7EB;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #F9FAFB;
-            color: var(--color-text);
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .sidebar {
-            background-color: white;
-            border-right: 1px solid var(--color-border);
-            padding: 24px 16px;
-            width: 250px;
-            overflow-y: auto;
-        }
-
-        .sidebar-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .sidebar-subtitle {
-            font-size: 12px;
-            color: #9CA3AF;
-            margin-bottom: 32px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 8px;
-            border: none;
-            background: none;
-            font-size: 14px;
-            width: 100%;
-            text-align: left;
-            transition: all 0.2s;
-            color: var(--color-text);
-        }
-
-        .nav-item:hover {
-            background-color: var(--color-surface);
-        }
-
-        .nav-item.active {
-            background-color: var(--color-surface);
-            color: var(--color-primary);
-            font-weight: 600;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .header {
-            background: white;
-            border-bottom: 1px solid var(--color-border);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 24px;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background-color: var(--color-primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--color-primary-hover);
-        }
-
-        .btn-secondary {
-            background-color: white;
-            border: 1px solid var(--color-border);
-            color: var(--color-text);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--color-surface);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background-color: var(--color-surface);
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        th {
-            font-weight: 600;
-            color: var(--color-text);
-        }
-
-        tr:hover {
-            background-color: #FAFAFA;
-        }
-
-        .product-img {
-            width: 40px;
-            height: 40px;
-            background-color: var(--color-surface);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .status-ativo {
-            background-color: #D1FAE5;
-            color: #065F46;
-        }
-
-        .kanban {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
-
-        .kanban-column {
-            background-color: var(--color-surface);
-            border-radius: 12px;
-            min-height: 400px;
-            padding: 16px;
-        }
-
-        .kanban-column h3 {
-            font-weight: bold;
-            margin-bottom: 16px;
-            margin: 0 0 16px 0;
-        }
-
-        .kanban-card {
-            background: white;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--color-primary);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 50;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 90%;
-            padding: 24px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal h2 {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 16px;
-            margin: 0 0 16px 0;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid var(--color-border);
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .radio-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .radio-option {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            padding: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .radio-option input[type="radio"] {
-            cursor: pointer;
-            margin-top: 2px;
-        }
-
-        .radio-option:hover {
-            background-color: var(--color-surface);
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .flex-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .flex-row button {
-            flex: 1;
-        }
+        :root { --color-primary: #1E40AF; --color-surface: #F3F4F6; --color-text: #1F2937; --color-border: #D1D5DB; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: #F9FAFB; color: var(--color-text); }
+        .container { display: flex; height: 100vh; }
+        .sidebar { background-color: white; border-right: 1px solid var(--color-border); padding: 24px 16px; width: 260px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; cursor: pointer; border: none; background: none; font-size: 14px; width: 100%; text-align: left; margin-bottom: 8px; font-weight: 600; color: #4B5563; transition: background 0.2s; }
+        .nav-item:hover { background-color: #F3F4F6; }
+        .nav-item.active { background-color: #EFF6FF; color: var(--color-primary); }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .header { background: white; border-bottom: 1px solid var(--color-border); padding: 20px 32px; font-size: 22px; font-weight: 800; color: #111827; }
+        .content { flex: 1; overflow-y: auto; padding: 32px; }
+        .btn { padding: 10px 16px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-size: 13px; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background-color: var(--color-primary); color: white; }
+        .btn-success { background-color: #059669; color: white; }
+        .btn-danger { background-color: white; border: 1px solid #DC2626; color: #DC2626; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;}
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid #E5E7EB; font-size: 14px; }
+        th { background-color: #F9FAFB; color: #6B7280; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.05em; }
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .badge-digital { background-color: #E0E7FF; color: #3730A3; }
+        .badge-fisico { background-color: #FEF3C7; color: #92400E; }
+        .kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .kanban-column { background-color: #F3F4F6; border-radius: 12px; padding: 20px; min-height: 70vh; border: 1px solid #E5E7EB;}
+        .kanban-card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-top: 4px solid var(--color-primary); }
+        .kanban-card.Concluído { border-top-color: #059669; opacity: 0.85; }
+        .kanban-card.Cancelado { border-top-color: #DC2626; opacity: 0.85; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(17, 24, 39, 0.7); justify-content: center; align-items: center; z-index: 50; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 12px; width: 100%; max-width: 550px; padding: 32px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #374151; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s;}
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--color-primary); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-
     <script>
         const e = React.createElement;
         const { useState } = React;
 
-        const PRODUCTS = [
-            { id: 1, name: 'Livro A Vida É Bela', category: 'Livros', cost: 800, stock: 5, status: 'Ativo', image: '📚' },
-            { id: 2, name: 'Caneta Premium', category: 'Escritório', cost: 50, stock: 50, status: 'Ativo', image: '✏️' },
-            { id: 3, name: 'Ecobag Corporativa', category: 'Acessórios', cost: 150, stock: 5, status: 'Ativo', image: '🛍️' },
+        const initialProducts = [
+            { id: 1, name: 'Livro: Leis da Psicologia em UX', description: 'Obra de referência para designers.', type: 'Físico', cost: 800, isLimited: true, stock: 12, status: 'Ativo' },
+            { id: 2, name: 'Licença Power BI Pro (1 Mês)', description: 'Voucher de acesso premium.', type: 'Digital', cost: 1500, isLimited: false, stock: null, status: 'Ativo' },
+            { id: 3, name: 'Kit Smart Home (Sonoff)', description: 'Automação para escritório.', type: 'Físico', cost: 2000, isLimited: true, stock: 5, status: 'Ativo' }
         ];
 
-        const INITIAL_ORDERS = [
-            { id: 101, userName: 'João Silva', product: 'Livro A Vida É Bela', date: '18/12/2025', value: 800, status: 'Solicitado', userId: 'J001' },
-            { id: 102, userName: 'Maria Souza', product: 'Caneta Premium', date: '17/12/2025', value: 50, status: 'Em Separação', userId: 'M001' },
-            { id: 103, userName: 'Carlos Lima', product: 'Ecobag Corporativa', date: '16/12/2025', value: 150, status: 'Cancelado', userId: 'C001' },
+        const initialOrders = [
+            { id: 101, user: 'Matheus Costa', product: 'Livro: Leis da Psicologia em UX', type: 'Físico', detail: 'Endereço: Rua Principal, 123, Divinópolis - MG', status: 'Solicitado', date: '15/06/2026' },
+            { id: 102, user: 'Ana Paula', product: 'Licença Power BI Pro (1 Mês)', type: 'Digital', detail: 'Envio para email corporativo.', status: 'Solicitado', date: '14/06/2026' },
+            { id: 103, user: 'Lucas Mendes', product: 'Kit Smart Home (Sonoff)', type: 'Físico', detail: 'Endereço: Regional MG', status: 'Concluído', date: '10/06/2026' }
         ];
 
         function App() {
-            const [activeTab, setActiveTab] = useState('produtos');
-            const [products, setProducts] = useState(PRODUCTS);
-            const [orders, setOrders] = useState(INITIAL_ORDERS);
-            const [showProductModal, setShowProductModal] = useState(false);
+            const [tab, setTab] = useState('pedidos');
+            const [products, setProducts] = useState(initialProducts);
+            const [orders, setOrders] = useState(initialOrders);
+            const [showProdModal, setShowProdModal] = useState(false);
             const [showCancelModal, setShowCancelModal] = useState(false);
             const [selectedOrder, setSelectedOrder] = useState(null);
+            
+            const [newProd, setNewProd] = useState({ name: '', description: '', type: 'Físico', cost: '', isLimited: false, stock: '' });
             const [cancelReason, setCancelReason] = useState('');
-            const [cancelDestino, setCancelDestino] = useState('estoque');
-            const [newProduct, setNewProduct] = useState({ name: '', description: '', cost: '', stock: '' });
+            const [cancelDestino, setCancelDestino] = useState('Retornar ao Estoque');
 
-            const handleAddProduct = () => {
-                if (newProduct.name && newProduct.cost && newProduct.stock) {
-                    setProducts([...products, {
-                        id: products.length + 1,
-                        name: newProduct.name,
-                        category: 'Novo',
-                        cost: parseInt(newProduct.cost),
-                        stock: parseInt(newProduct.stock),
-                        status: 'Ativo',
-                        image: '📦'
-                    }]);
-                    setNewProduct({ name: '', description: '', cost: '', stock: '' });
-                    setShowProductModal(false);
-                }
-            };
-
-            const handleConfirmSeparacao = (orderId) => {
-                setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'Em Separação' } : o));
-            };
-
-            const handleConfirmEntrega = (orderId) => {
-                setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'Concluído' } : o));
+            const handleConcluir = (id) => {
+                setOrders(orders.map(o => o.id === id ? { ...o, status: 'Concluído' } : o));
             };
 
             const handleCancelClick = (order) => {
-                setSelectedOrder(order);
-                setCancelReason('');
-                setCancelDestino('estoque');
-                setShowCancelModal(true);
+                setSelectedOrder(order); setCancelReason(''); setCancelDestino('Retornar ao Estoque'); setShowCancelModal(true);
             };
 
-            const handleConfirmCancel = () => {
-                if (selectedOrder) {
-                    setOrders(orders.map(o => 
-                        o.id === selectedOrder.id ? { ...o, status: 'Cancelado' } : o
-                    ));
-                    setShowCancelModal(false);
-                    setSelectedOrder(null);
+            const confirmCancel = () => {
+                setOrders(orders.map(o => o.id === selectedOrder.id ? { ...o, status: 'Cancelado' } : o));
+                setShowCancelModal(false);
+            };
+
+            const saveProduct = () => {
+                if(newProd.name && newProd.cost) {
+                    setProducts([...products, { ...newProd, id: Date.now(), status: 'Ativo', stock: newProd.isLimited ? newProd.stock : null }]);
+                    setShowProdModal(false);
                 }
             };
 
-            const getStatusColumns = () => {
-                const statuses = ['Solicitado', 'Em Separação', 'Concluído', 'Cancelado'];
-                return statuses.map(status => ({
-                    status,
-                    orders: orders.filter(o => o.status === status)
-                }));
-            };
-
             return e('div', { className: 'container' },
-                // Sidebar
                 e('div', { className: 'sidebar' },
-                    e('div', null,
-                        e('div', { className: 'sidebar-title' }, 'Clube de Pontos'),
-                        e('div', { className: 'sidebar-subtitle' }, 'Gestor')
-                    ),
-                    e('nav', null,
-                        e('button', {
-                            className: `nav-item ${activeTab === 'produtos' ? 'active' : ''}`,
-                            onClick: () => setActiveTab('produtos')
-                        }, '📦 Produtos'),
-                        e('button', {
-                            className: `nav-item ${activeTab === 'pedidos' ? 'active' : ''}`,
-                            onClick: () => setActiveTab('pedidos')
-                        }, '📋 Pedidos')
-                    )
+                    e('h2', { style: { fontSize: '16px', marginBottom: '32px', color: '#111827', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' } }, 'Gestão de Benefícios'),
+                    e('button', { className: `nav-item ${tab === 'pedidos' ? 'active' : ''}`, onClick: () => setTab('pedidos') }, 'Fila de Processamento'),
+                    e('button', { className: `nav-item ${tab === 'produtos' ? 'active' : ''}`, onClick: () => setTab('produtos') }, 'Catálogo de Produtos')
                 ),
-
-                // Main Content
                 e('div', { className: 'main-content' },
-                    e('div', { className: 'header' },
-                        e('h1', null, activeTab === 'produtos' ? 'Gestão de Produtos' : 'Gestão de Pedidos')
-                    ),
-
+                    e('div', { className: 'header' }, tab === 'pedidos' ? 'Fila de Processamento de Resgates' : 'Gerenciamento de Catálogo'),
                     e('div', { className: 'content' },
-                        activeTab === 'produtos' ? 
-                            e('div', null,
-                                e('button', {
-                                    className: 'btn btn-primary',
-                                    onClick: () => setShowProductModal(true),
-                                    style: { marginBottom: '24px' }
-                                }, '+ Novo Produto'),
-                                e('div', { className: 'table-container' },
-                                    e('table', null,
-                                        e('thead', null,
-                                            e('tr', null,
-                                                e('th', null, 'Imagem'),
-                                                e('th', null, 'Nome'),
-                                                e('th', null, 'Categoria'),
-                                                e('th', null, 'Custo (Pts)'),
-                                                e('th', null, 'Estoque'),
-                                                e('th', null, 'Status')
-                                            )
-                                        ),
-                                        e('tbody', null,
-                                            products.map(product => 
-                                                e('tr', { key: product.id },
-                                                    e('td', null, e('div', { className: 'product-img' }, product.image)),
-                                                    e('td', { style: { fontWeight: 500 } }, product.name),
-                                                    e('td', null, product.category),
-                                                    e('td', null, e('strong', null, product.cost)),
-                                                    e('td', null, product.stock),
-                                                    e('td', null, e('span', { className: 'status-badge status-ativo' }, product.status))
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            ) : null,
-
-                        activeTab === 'pedidos' ?
-                            e('div', { className: 'kanban' },
-                                getStatusColumns().map(column =>
-                                    e('div', { key: column.status, className: 'kanban-column' },
-                                        e('h3', null, column.status),
-                                        column.orders.map(order =>
-                                            e('div', { key: order.id, className: 'kanban-card' },
-                                                e('div', { style: { fontWeight: 500, fontSize: '14px', marginBottom: '8px' } }, order.userName),
-                                                e('div', { style: { fontSize: '12px', color: '#4B5563', marginBottom: '8px' } }, order.product),
-                                                e('div', { style: { fontSize: '12px', color: '#6B7280', marginBottom: '12px' } }, order.date + ' • ' + order.value + ' pts'),
-                                                e('div', { className: 'flex-row' },
-                                                    order.status === 'Solicitado' ?
-                                                        [
-                                                            e('button', {
-                                                                key: 'sep',
-                                                                className: 'btn btn-primary btn-sm',
-                                                                onClick: () => handleConfirmSeparacao(order.id)
-                                                            }, 'Separar'),
-                                                            e('button', {
-                                                                key: 'can',
-                                                                className: 'btn btn-secondary btn-sm',
-                                                                onClick: () => handleCancelClick(order)
-                                                            }, 'Cancelar')
-                                                        ] : null,
-                                                    order.status === 'Em Separação' ?
-                                                        e('button', {
-                                                            className: 'btn btn-primary btn-sm',
-                                                            onClick: () => handleConfirmEntrega(order.id),
-                                                            style: { width: '100%' }
-                                                        }, 'Confirmar Entrega') : null
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            ) : null
-                    )
-                ),
-
-                // Product Modal
-                e('div', {
-                    className: `modal-overlay ${showProductModal ? 'active' : ''}`,
-                    onClick: () => setShowProductModal(false)
-                },
-                    e('div', {
-                        className: 'modal',
-                        onClick: (ev) => ev.stopPropagation()
-                    },
-                        e('h2', null, 'Novo Produto'),
-                        e('div', { className: 'form-group' },
-                            e('label', { className: 'form-label' }, 'Nome do Produto'),
-                            e('input', {
-                                type: 'text',
-                                value: newProduct.name,
-                                onChange: (ev) => setNewProduct({ ...newProduct, name: ev.target.value })
-                            })
-                        ),
-                        e('div', { className: 'form-group' },
-                            e('label', { className: 'form-label' }, 'Descrição'),
-                            e('textarea', {
-                                value: newProduct.description,
-                                onChange: (ev) => setNewProduct({ ...newProduct, description: ev.target.value })
-                            })
-                        ),
-                        e('div', { className: 'grid-2' },
-                            e('div', { className: 'form-group' },
-                                e('label', { className: 'form-label' }, 'Custo (Pts)'),
-                                e('input', {
-                                    type: 'number',
-                                    value: newProduct.cost,
-                                    onChange: (ev) => setNewProduct({ ...newProduct, cost: ev.target.value })
-                                })
-                            ),
-                            e('div', { className: 'form-group' },
-                                e('label', { className: 'form-label' }, 'Estoque'),
-                                e('input', {
-                                    type: 'number',
-                                    value: newProduct.stock,
-                                    onChange: (ev) => setNewProduct({ ...newProduct, stock: ev.target.value })
-                                })
+                        tab === 'produtos' && e('div', null,
+                            e('button', { className: 'btn btn-primary', style: { marginBottom: '24px' }, onClick: () => { setNewProd({ name: '', description: '', type: 'Físico', cost: '', isLimited: false, stock: '' }); setShowProdModal(true); } }, '+ Adicionar Novo Produto'),
+                            e('table', null,
+                                e('thead', null, e('tr', null, e('th', null, 'Produto e Descrição'), e('th', null, 'Formato'), e('th', null, 'Valor (Pts)'), e('th', null, 'Em Estoque'), e('th', null, 'Status'))),
+                                e('tbody', null, products.map(p => e('tr', { key: p.id },
+                                    e('td', null, 
+                                        e('div', { style: { fontWeight: 700, color: '#111827', marginBottom: '4px' } }, p.name),
+                                        e('div', { style: { fontSize: '12px', color: '#6B7280' } }, p.description)
+                                    ),
+                                    e('td', null, e('span', { className: `badge ${p.type === 'Digital' ? 'badge-digital' : 'badge-fisico'}` }, p.type)),
+                                    e('td', { style: { fontWeight: 700, color: '#1E40AF'} }, p.cost),
+                                    e('td', null, p.isLimited ? e('span', {style: {fontWeight: 600}}, p.stock) : '∞ Ilimitado'),
+                                    e('td', null, e('span', { style: { color: '#059669', fontWeight: 700, fontSize: '12px' } }, p.status))
+                                )))
                             )
                         ),
-                        e('div', { className: 'modal-buttons' },
-                            e('button', {
-                                className: 'btn btn-secondary',
-                                onClick: () => setShowProductModal(false)
-                            }, 'Cancelar'),
-                            e('button', {
-                                className: 'btn btn-primary',
-                                onClick: handleAddProduct
-                            }, 'Adicionar')
+                        tab === 'pedidos' && e('div', { className: 'kanban' },
+                            ['Solicitado', 'Concluído', 'Cancelado'].map(status => e('div', { key: status, className: 'kanban-column' },
+                                e('h3', { style: { marginBottom: '20px', fontSize: '14px', fontWeight: 800, color: '#4B5563', textTransform: 'uppercase' } }, `${status} (${orders.filter(o => o.status === status).length})`),
+                                orders.filter(o => o.status === status).map(o => e('div', { key: o.id, className: `kanban-card ${status}` },
+                                    e('div', { style: { fontSize: '11px', fontWeight: 700, color: '#9CA3AF', marginBottom: '8px', textTransform: 'uppercase' } }, o.date),
+                                    e('div', { style: { fontWeight: 800, fontSize: '15px', color: '#111827', marginBottom: '4px' } }, o.user),
+                                    e('div', { style: { fontSize: '13px', color: '#1E40AF', marginBottom: '12px', fontWeight: 600 } }, o.product),
+                                    e('div', { style: { fontSize: '13px', background: '#F9FAFB', padding: '10px', borderRadius: '6px', marginBottom: '16px', color: '#4B5563', border: '1px solid #E5E7EB' } }, o.detail),
+                                    status === 'Solicitado' && e('div', { style: { display: 'flex', gap: '8px' } },
+                                        e('button', { className: 'btn btn-success', style: { flex: 2 }, onClick: () => handleConcluir(o.id) }, o.type === 'Digital' ? 'Enviar Voucher' : 'Marcar Despachado'),
+                                        e('button', { className: 'btn btn-danger', style: { flex: 1 }, onClick: () => handleCancelClick(o) }, 'Negar')
+                                    )
+                                ))
+                            ))
+                        )
+                    )
+                ),
+                
+                // Modal Produto
+                e('div', { className: `modal-overlay ${showProdModal ? 'active' : ''}`, onClick: () => setShowProdModal(false) },
+                    e('div', { className: 'modal', onClick: e => e.stopPropagation() },
+                        e('h2', { style: { marginBottom: '24px', fontSize: '20px', fontWeight: 800 } }, 'Informações do Produto'),
+                        e('div', { className: 'form-group' }, 
+                            e('label', null, 'Título do Produto'), 
+                            e('input', { type: 'text', placeholder: 'Ex: Livro de UX', value: newProd.name, onChange: e => setNewProd({...newProd, name: e.target.value}) })
+                        ),
+                        e('div', { className: 'form-group' }, 
+                            e('label', null, 'Descrição Resumida'), 
+                            e('textarea', { rows: 2, placeholder: 'Detalhes para o aluno...', value: newProd.description, onChange: e => setNewProd({...newProd, description: e.target.value}) })
+                        ),
+                        e('div', { className: 'grid-2' },
+                            e('div', { className: 'form-group' }, e('label', null, 'Formato do Item'), e('select', { value: newProd.type, onChange: e => setNewProd({...newProd, type: e.target.value}) }, e('option', null, 'Físico'), e('option', null, 'Digital'))),
+                            e('div', { className: 'form-group' }, e('label', null, 'Custo (Pontos)'), e('input', { type: 'number', placeholder: 'Ex: 500', value: newProd.cost, onChange: e => setNewProd({...newProd, cost: e.target.value}) }))
+                        ),
+                        e('div', { className: 'form-group', style: { display: 'flex', alignItems: 'center', gap: '10px', background: '#F9FAFB', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' } },
+                            e('input', { type: 'checkbox', style: { width: '18px', height: '18px', cursor: 'pointer' }, checked: newProd.isLimited, onChange: e => setNewProd({...newProd, isLimited: e.target.checked}) }),
+                            e('label', { style: { margin: 0, cursor: 'pointer' } }, 'Quantidade Limitada (Gerenciar Estoque)')
+                        ),
+                        newProd.isLimited && e('div', { className: 'form-group' }, 
+                            e('label', null, 'Quantidade Inicial em Estoque'), 
+                            e('input', { type: 'number', placeholder: 'Ex: 10', value: newProd.stock, onChange: e => setNewProd({...newProd, stock: e.target.value}) })
+                        ),
+                        e('div', { style: { display: 'flex', gap: '12px', marginTop: '32px' } },
+                            e('button', { className: 'btn btn-danger', style: { flex: 1, padding: '12px' }, onClick: () => setShowProdModal(false) }, 'Cancelar'),
+                            e('button', { className: 'btn btn-primary', style: { flex: 1, padding: '12px' }, onClick: saveProduct }, 'Salvar no Catálogo')
                         )
                     )
                 ),
 
-                // Cancel Modal
-                e('div', {
-                    className: `modal-overlay ${showCancelModal ? 'active' : ''}`,
-                    onClick: () => setShowCancelModal(false)
-                },
-                    e('div', {
-                        className: 'modal',
-                        onClick: (ev) => ev.stopPropagation()
-                    },
-                        e('h2', null, 'Cancelar Pedido'),
-                        selectedOrder ? e('p', { style: { fontSize: '14px', color: '#4B5563', marginBottom: '16px', margin: '0 0 16px 0' } }, selectedOrder.userName + ' • ' + selectedOrder.product) : null,
-                        e('div', { className: 'form-group' },
-                            e('label', { className: 'form-label' }, 'Motivo do Cancelamento'),
-                            e('textarea', {
-                                value: cancelReason,
-                                onChange: (ev) => setCancelReason(ev.target.value),
-                                placeholder: 'Descreva o motivo...'
-                            })
+                // Modal Cancelamento
+                e('div', { className: `modal-overlay ${showCancelModal ? 'active' : ''}`, onClick: () => setShowCancelModal(false) },
+                    e('div', { className: 'modal', onClick: e => e.stopPropagation() },
+                        e('h2', { style: { marginBottom: '24px', fontSize: '20px', fontWeight: 800 } }, 'Negar/Cancelar Solicitação'),
+                        e('div', { className: 'form-group' }, 
+                            e('label', null, 'Justificativa (Será enviada por e-mail ao solicitante)'), 
+                            e('textarea', { rows: 3, placeholder: 'Ex: Endereço inválido, item extraviado...', value: cancelReason, onChange: e => setCancelReason(e.target.value) })
                         ),
-                        e('div', { className: 'form-group' },
-                            e('label', { className: 'form-label' }, 'Destino do Estoque'),
-                            e('div', { className: 'radio-group' },
-                                e('label', { className: 'radio-option' },
-                                    e('input', {
-                                        type: 'radio',
-                                        name: 'destino',
-                                        value: 'estoque',
-                                        checked: cancelDestino === 'estoque',
-                                        onChange: (ev) => setCancelDestino(ev.target.value)
-                                    }),
-                                    e('span', null,
-                                        e('div', { style: { fontWeight: 500 } }, 'Retornar ao Estoque'),
-                                        e('div', { style: { fontSize: '12px', color: '#6B7280' } }, 'Erro operacional/Desistência')
-                                    )
-                                ),
-                                e('label', { className: 'radio-option' },
-                                    e('input', {
-                                        type: 'radio',
-                                        name: 'destino',
-                                        value: 'baixa',
-                                        checked: cancelDestino === 'baixa',
-                                        onChange: (ev) => setCancelDestino(ev.target.value)
-                                    }),
-                                    e('span', null,
-                                        e('div', { style: { fontWeight: 500 } }, 'Dar Baixa / Perda'),
-                                        e('div', { style: { fontSize: '12px', color: '#6B7280' } }, 'Avaria/Extravio')
-                                    )
-                                )
+                        e('div', { className: 'form-group' }, 
+                            e('label', null, 'Destino da Unidade (Controle de Estoque)'), 
+                            e('select', { value: cancelDestino, onChange: e => setCancelDestino(e.target.value) }, 
+                                e('option', null, 'Retornar ao Estoque (Disponibilizar novamente)'), 
+                                e('option', null, 'Dar Baixa (Avaria / Extravio definitivo)')
                             )
                         ),
-                        e('div', { className: 'modal-buttons' },
-                            e('button', {
-                                className: 'btn btn-secondary',
-                                onClick: () => setShowCancelModal(false)
-                            }, 'Voltar'),
-                            e('button', {
-                                className: 'btn btn-primary',
-                                onClick: handleConfirmCancel
-                            }, 'Confirmar Cancelamento')
+                        e('div', { style: { display: 'flex', gap: '12px', marginTop: '32px' } },
+                            e('button', { className: 'btn btn-danger', style: { flex: 1, padding: '12px', background: 'white' }, onClick: () => setShowCancelModal(false) }, 'Voltar'),
+                            e('button', { className: 'btn btn-primary', style: { flex: 1, padding: '12px', background: '#DC2626' }, onClick: confirmCancel }, 'Confirmar Estorno')
                         )
                     )
                 )
             );
         }
-
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(React.createElement(App));
     </script>
